@@ -42,6 +42,9 @@ def make_answer_equality_test(hw, soln, expected_vars: dict[str, dict[str, bool]
 
     @pytest.mark.parametrize("student_hw,soln_nb,var_name,args", parameters)
     def test_answer_equality(student_hw, soln_nb, var_name, args):
+        msg = f"\nISSUE FOUND: The required variable name \"{var_name}\" is missing from your submission.\n"
+        assert hasattr(student_hw, var_name), msg
+
         student_value = getattr(student_hw, var_name)
         soln_value = getattr(soln_nb, var_name)
 
@@ -56,15 +59,17 @@ def make_answer_equality_test(hw, soln, expected_vars: dict[str, dict[str, bool]
                 f"\n"
                 f"ISSUE FOUND: The value of your variable {var_name}:\n"
                 f"\n"
-                f"{student_value}"
-                f"\n"
+                f"     {student_value}"
+                f"\n\n"
                 f"is not equal to what we expect:\n"
                 f"\n"
-                f"{soln_value}"
-                f"\n"
+                f"     {soln_value}"
+                f"\n\n"
                 f"In case it helps, your variable {var_name} has type {type(student_value)}.\n"
             )
 
+            if isinstance(soln_value, float):
+                soln_value = pytest.approx(soln_value, **args)
             assert student_value == soln_value, msg
 
     return test_answer_equality

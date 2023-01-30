@@ -87,7 +87,6 @@ def assert_list_equality(student_value, soln_value, var_name: str):
     assert len(student_value) == len(soln_value), msg
     
     # For smaller size lists, we can display the entire list when showing the difference 
-    # if there is a mismatch
     if len(soln_value) < 25:
         msg = (
             f"\n"

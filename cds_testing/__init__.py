@@ -54,6 +54,8 @@ def make_answer_equality_test(hw, soln, expected_vars: dict[str, dict[str, bool]
             pd.testing.assert_series_equal(student_value, soln_value, obj=var_name, **args)
         elif isinstance(soln_value, pd.DataFrame):
             pd.testing.assert_frame_equal(student_value, soln_value, obj=var_name, **args)
+        elif isinstance(soln_value, list):
+            assert_list_equality(student_value, soln_value, var_name)
         else:
             msg = (
                 f"\n"
@@ -74,7 +76,56 @@ def make_answer_equality_test(hw, soln, expected_vars: dict[str, dict[str, bool]
 
     return test_answer_equality
 
+def assert_list_equality(student_value, soln_value, var_name: str):
+    """
+    Utility function to test the equality of lists. If the lists are large, then only
+    display the first value that is incorrect. 
+    """
+    msg = ( f"\n"
+        f"ISSUE FOUND: Your list variable {var_name} has a length of {len(student_value)} but should have a length of {len(soln_value)}.\n"
+    )    
+    assert len(student_value) == len(soln_value), msg
+    
+    # For smaller size lists, we can display the entire list when showing the difference 
+    # if there is a mismatch
+    if len(soln_value) < 25:
+        msg = (
+            f"\n"
+            f"ISSUE FOUND: The value of your list variable {var_name}:\n"
+            f"\n"
+            f"     {student_value}"
+            f"\n\n"
+            f"is not equal to what we expect:\n"
+            f"\n"
+            f"     {soln_value}"
+            f"\n\n"
+            f"In case it helps, your variable {var_name} has type {type(student_value)}.\n"
+        )
+        assert student_value == soln_value, msg
+    else:
+        # If the lists are large, then only search for the first error instead of 
+        # displaying the entire list difference 
+        incorrect_index = -1
+        for i in range(len(student_value)):
+            if student_value[i] != soln_value[i]:
+                incorrect_index = i
+                break
+        msg = (
+            f"\n"
+            f"ISSUE FOUND: The value of your list variable {var_name} is not equal to what we expect\n"
+            f"The first incorrect value in your list occurred at index {incorrect_index}.\n"
+            f"At index {incorrect_index}, your variable {var_name} was equal to:\n"
+            f"\n"
+            f"     {student_value[incorrect_index]}"
+            f"\n\n"
+            f"is not equal to what we expect:\n"
+            f"\n"
+            f"     {soln_value[incorrect_index]}"
+            f"\n"
+        )
+        assert incorrect_index == -1, msg
 
+         
 # Example functions (not to be used in final version)
 
 # @pytest.fixture

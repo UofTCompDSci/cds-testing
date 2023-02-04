@@ -19,7 +19,7 @@ def make_variable_names_test(hw, expected_vars: dict[str, dict]) -> Callable:
 
     @pytest.mark.parametrize("expected_var_name", expected_var_names)
     def test_variable_name(expected_var_name: str):
-        msg = f"\nISSUE FOUND: The required variable name \"{expected_var_name}\" is missing from your submission.\n"
+        msg = f"ISSUE FOUND: The required variable name \"{expected_var_name}\" is missing from your submission.\n"
 
         assert hasattr(hw, expected_var_name), msg
 
@@ -28,9 +28,7 @@ def make_variable_names_test(hw, expected_vars: dict[str, dict]) -> Callable:
 
 def assert_type(var_name, var_value, expected_value):
     """ Verifies that the students answer is of the correct type."""
-    msg = ( f"\n"
-            f"ISSUE FOUND: Your variable {var_name} has type {type(var_value)} but should have type {type(expected_value)}.\n"
-        )
+    msg = f"ISSUE FOUND: Your variable {var_name} has type {type(var_value)} but should have type {type(expected_value)}.\n"
     assert isinstance(var_value, type(expected_value)), msg
 
 
@@ -42,7 +40,7 @@ def make_answer_equality_test(hw, soln, expected_vars: dict[str, dict[str, bool]
 
     @pytest.mark.parametrize("student_hw,soln_nb,var_name,args", parameters)
     def test_answer_equality(student_hw, soln_nb, var_name, args):
-        msg = f"\nISSUE FOUND: The required variable name \"{var_name}\" is missing from your submission.\n"
+        msg = f"ISSUE FOUND: The required variable name \"{var_name}\" is missing from your submission.\n"
         assert hasattr(student_hw, var_name), msg
 
         student_value = getattr(student_hw, var_name)
@@ -60,7 +58,6 @@ def make_answer_equality_test(hw, soln, expected_vars: dict[str, dict[str, bool]
             pd.testing.assert_frame_equal(student_value, soln_value, obj=var_name, **args)
         else:
             msg = (
-                f"\n"
                 f"ISSUE FOUND: The value of your variable {var_name}:\n"
                 f"\n"
                 f"     {student_value}"

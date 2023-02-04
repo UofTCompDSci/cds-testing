@@ -58,13 +58,11 @@ def make_answer_equality_test(hw, soln, expected_vars: dict[str, dict[str, bool]
             pd.testing.assert_frame_equal(student_value, soln_value, obj=var_name, **args)
         else:
             msg = (
-                f"ISSUE FOUND: The value of your variable {var_name}:\n"
+                f"ISSUE FOUND: The value of your variable {var_name} does not match the expected value:\n"
                 f"\n"
-                f"     {student_value}"
-                f"\n\n"
-                f"is not equal to what we expect:\n"
+                f"Yours:     {student_value}"
                 f"\n"
-                f"     {soln_value}"
+                f"Expected:     {soln_value}"
                 f"\n\n"
                 f"In case it helps, your variable {var_name} has type {type(student_value)}.\n"
             )

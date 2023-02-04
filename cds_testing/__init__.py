@@ -3,7 +3,7 @@ from typing import Any, Callable
 from notebook_helper import importer
 import pytest
 import pandas as pd
-
+import numpy as np
 
 def load_code(request):
     cells = importer.get_cells(request.param)
@@ -47,8 +47,12 @@ def make_answer_equality_test(hw, soln, expected_vars: dict[str, dict[str, bool]
 
         student_value = getattr(student_hw, var_name)
         soln_value = getattr(soln_nb, var_name)
-
-        assert_type(var_name, student_value, soln_value)
+        
+        # If either variable is of numpy generic type, then we can skip the type check
+        # and go straight to the equality check. As some of the values in the hw/soln may be correct
+        # but the difference might be <int> vs <numpy.int64>.
+        if not(isinstance(student_value, np.generic) or isinstance(soln_value, np.generic)):
+            assert_type(var_name, student_value, soln_value)
 
         if isinstance(soln_value, pd.Series):
             pd.testing.assert_series_equal(student_value, soln_value, obj=var_name, **args)

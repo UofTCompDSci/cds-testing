@@ -96,9 +96,7 @@ def assert_list_equality(student_value, soln_value, var_name: str):
             f"\n\n"
             f"is not equal to what we expect:\n"
             f"\n"
-            f"     {soln_value}"
-            f"\n\n"
-            f"In case it helps, your variable {var_name} has type {type(student_value)}.\n"
+            f"     {soln_value}\n"
         )
         assert student_value == soln_value, msg
     else:
@@ -113,7 +111,7 @@ def assert_list_equality(student_value, soln_value, var_name: str):
             f"\n"
             f"ISSUE FOUND: The value of your list variable {var_name} is not equal to what we expect\n"
             f"The first incorrect value in your list occurred at index {incorrect_index}.\n"
-            f"At index {incorrect_index}, your variable {var_name} was equal to:\n"
+            f"At index {incorrect_index}, your variable {var_name} contained the value:\n"
             f"\n"
             f"     {student_value[incorrect_index]}"
             f"\n\n"
